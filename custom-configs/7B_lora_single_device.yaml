@@ -16,7 +16,7 @@
 # This config works only for training on single device.
 
 
-output_dir: /tmp/torchtune/llama2_7B/lora_single_device # /tmp may be deleted by your system. Change it to your preference.
+output_dir: ./models/llama2_7B/lora_single_device # /tmp may be deleted by your system. Change it to your preference.
 
 # Model Arguments
 model:
@@ -30,12 +30,12 @@ model:
 
 tokenizer:
   _component_: torchtune.models.llama2.llama2_tokenizer
-  path: /tmp/Llama-2-7b-hf/tokenizer.model
+  path: ./models/Llama-2-7b-hf/tokenizer.model
   max_seq_len: null
 
 checkpointer:
   _component_: torchtune.training.FullModelHFCheckpointer
-  checkpoint_dir: /tmp/Llama-2-7b-hf
+  checkpoint_dir: ./models/Llama-2-7b-hf
   checkpoint_files: [
     model-00001-of-00002.safetensors,
     model-00002-of-00002.safetensors
@@ -57,7 +57,7 @@ dataset:
   split: train
 seed: null
 shuffle: True
-batch_size: 4
+batch_size: 2
 
 # Optimizer and Scheduler
 optimizer:
@@ -67,13 +67,13 @@ optimizer:
   lr: 3e-4
 lr_scheduler:
   _component_: torchtune.training.lr_schedulers.get_cosine_schedule_with_warmup
-  num_warmup_steps: 100
+  num_warmup_steps: 5
 
 loss:
   _component_: torchtune.modules.loss.LinearCrossEntropyLoss
 
 # Training
-epochs: 1
+epochs: 3
 max_steps_per_epoch: null
 gradient_accumulation_steps: 8  # Use to increase effective batch size
 clip_grad_norm: null
@@ -81,7 +81,8 @@ compile: False  # torch.compile the model + loss, True increases speed + decreas
 
 # Logging
 metric_logger:
-  _component_: torchtune.training.metric_logging.DiskLogger
+  _component_: torchtune.training.metric_logging.WandBLogger
+  project: torchtune-test
   log_dir: ${output_dir}/logs
 log_every_n_steps: 1
 log_peak_memory_stats: True

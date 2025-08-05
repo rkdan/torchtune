@@ -17,6 +17,7 @@ from ._model_builders import (  # noqa
     qlora_llama3_1_70b,
     qlora_llama3_1_8b,
 )
+from ._prompt_template import Llama31ChatTemplate
 from ._position_embeddings import Llama3ScaledRoPE
 
 __all__ = [

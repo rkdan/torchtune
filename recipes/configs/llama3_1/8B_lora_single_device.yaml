@@ -51,8 +51,12 @@ save_adapter_weights_only: False
 
 # Dataset and Sampler
 dataset:
-  _component_: torchtune.datasets.alpaca_cleaned_dataset
-  packed: False  # True increases speed
+  _component_: torchtune.datasets.chat_dataset
+  source: json
+  conversation_column: messages
+  conversation_style: openai
+  data_files: ./my_data.json
+  split: train
 seed: null
 shuffle: True
 batch_size: 2
@@ -79,7 +83,8 @@ compile: False  # torch.compile the model + loss, True increases speed + decreas
 
 # Logging
 metric_logger:
-  _component_: torchtune.training.metric_logging.DiskLogger
+  _component_: torchtune.training.metric_logging.WandBLogger
+  project: torchtune-test
   log_dir: ${output_dir}/logs
 log_every_n_steps: 1
 log_peak_memory_stats: True
